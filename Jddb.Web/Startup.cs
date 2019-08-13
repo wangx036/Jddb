@@ -144,8 +144,15 @@ namespace Jddb.Web
 
             #endregion
 
-            //(new SchedulerCenter()).SetCrawlJob();
+            #region Quartz任务
 
+            var _center = new SchedulerCenter();
+            // 爬取任务
+            //_center.SetCrawlJob();
+            // 缓存任务
+            _center.SetPriceTipJob();
+           
+            #endregion
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
@@ -188,7 +195,6 @@ namespace Jddb.Web
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            //(new CronJob()).InsertAuctionAndBidRecord();
         }
 
 

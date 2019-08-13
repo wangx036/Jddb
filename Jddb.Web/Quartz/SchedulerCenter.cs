@@ -51,12 +51,13 @@ namespace Jddb.Web.Quartz
 
                 _scheduler = schedulerFactory.GetScheduler().Result;
                 _scheduler.Start();//默认开始调度器
+
                 return _scheduler;
             }
         }
 
         /// <summary>
-        /// 添加一个工作调度
+        /// 添加一个工作调度：定时爬取数据
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
@@ -93,6 +94,44 @@ namespace Jddb.Web.Quartz
                 {
                     trigger = CreateSimpleTrigger(entity);
                 }
+
+                // 告诉Quartz使用我们的触发器来安排作业
+                await Scheduler.ScheduleJob(job, trigger);
+
+            }
+        }
+
+        /// <summary>
+        /// 添加一个工作调度：定时缓存价格信息
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task SetPriceTipJob()
+        {
+            var entity = new ScheduleEntity()
+            {
+                JobGroup = "PriceTipJob",
+                JobName = "PriceTipJob",
+                Description = "统计数据库中的价格信息，缓存到redis",
+                TriggerType = TriggerTypeEnum.Cron,
+                BeginTime = DateTimeOffset.Now,
+                EndTime = DateTimeOffset.Now.AddYears(10),
+                Cron = "0 30 8-23 * * ? " //每天8-23点，每个半点执行一次
+            };
+            //检查任务是否已存在
+            var jobKey = new JobKey(entity.JobName, entity.JobGroup);
+            if (!await Scheduler.CheckExists(jobKey))
+            {
+
+                // 定义这个工作，并将其绑定到我们的IJob实现类                
+                IJobDetail job = JobBuilder.CreateForAsync<PriceTipJob>()
+                    .WithDescription(entity.Description)
+                    .WithIdentity(entity.JobName, entity.JobGroup)
+                    .Build();
+                // 创建触发器
+                ITrigger trigger;
+                //校验是否正确的执行周期表达式
+                trigger = CreateCronTrigger(entity);
 
                 // 告诉Quartz使用我们的触发器来安排作业
                 await Scheduler.ScheduleJob(job, trigger);

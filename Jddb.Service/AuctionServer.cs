@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using CommonHelper;
@@ -17,17 +18,18 @@ namespace Jddb.Service
         /// </summary>
         /// <param name="usednos"></param>
         /// <returns></returns>
-        public async Task<List<PriceTip>> PriceTipsAsync(List<string> usednos, bool Async = true)
+        public async Task<List<PriceTip>> PriceTipsAsync(List<string> usednos=null, bool Async = true)
         {
             var quary = Db.Queryable<AuctionInfo>().GroupBy(a => a.UsedNo)
-                 .Where(a => a.HasBidRecord && usednos.Contains(a.UsedNo) && a.EndTime >= DateTime.Now.AddMonths(-1).ToTimeStampMs())
-                 .Select<PriceTip>(a => new PriceTip()
-                 {
-                     UsedNo = a.UsedNo,
-                     MinPrice = SqlFunc.AggregateMin(a.CurrentPrice),
-                     AvgPrice = SqlSugarExternal.SqlRound(SqlFunc.AggregateAvg(a.CurrentPrice), 0),
-                     Count = SqlFunc.AggregateCount(a.Id)
-                 });
+                .Where(a => a.HasBidRecord && a.EndTime >= DateTime.Now.AddMonths(-1).ToTimeStampMs())
+                .WhereIF(usednos != null && usednos.Any(), a => usednos.Contains(a.UsedNo))
+                .Select<PriceTip>(a => new PriceTip()
+                {
+                    UsedNo = a.UsedNo,
+                    MinPrice = SqlFunc.AggregateMin(a.CurrentPrice),
+                    AvgPrice = SqlSugarExternal.SqlRound(SqlFunc.AggregateAvg(a.CurrentPrice), 0),
+                    Count = SqlFunc.AggregateCount(a.Id)
+                });
             var list = Async ? await quary.ToListAsync() : quary.ToList();
 
             return list;
@@ -51,9 +53,9 @@ namespace Jddb.Service
                     ProductName = a.ProductName,
                     PrimaryPic = SqlFunc.AggregateMax(a.PrimaryPic),
                     Quality = a.Quality,
-                    Count = SqlFunc.AggregateCount(a.Id),
-                    MinPrice = SqlFunc.AggregateMin(a.CurrentPrice),
-                    AvgPrice = SqlSugarExternal.SqlRound(SqlFunc.AggregateAvg(a.CurrentPrice), 0)
+                    //Count = SqlFunc.AggregateCount(a.Id),
+                    //MinPrice = SqlFunc.AggregateMin(a.CurrentPrice),
+                    //AvgPrice = SqlSugarExternal.SqlRound(SqlFunc.AggregateAvg(a.CurrentPrice), 0)
                 });
             var page = Async ? await quary.ToPageAsync(pageIndex, pageSize) : quary.ToPage(pageIndex, pageSize);
 
@@ -76,9 +78,9 @@ namespace Jddb.Service
                     ProductName = a.ProductName,
                     PrimaryPic = SqlFunc.AggregateMax(a.PrimaryPic),
                     Quality = a.Quality,
-                    Count = SqlFunc.AggregateCount(a.Id),
-                    MinPrice = SqlFunc.AggregateMin(a.CurrentPrice),
-                    AvgPrice = SqlSugarExternal.SqlRound(SqlFunc.AggregateAvg(a.CurrentPrice), 0)
+                    //Count = SqlFunc.AggregateCount(a.Id),
+                    //MinPrice = SqlFunc.AggregateMin(a.CurrentPrice),
+                    //AvgPrice = SqlSugarExternal.SqlRound(SqlFunc.AggregateAvg(a.CurrentPrice), 0)
                 });
 
             return quary.ToList();

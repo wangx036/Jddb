@@ -93,6 +93,15 @@ namespace Jddb.Web.Controllers
             var userJobs = RedisHelper.Get<List<JobOffer>>(redisKey);
 
             var usedList = await _auctionService.UsedAuctions(o => userJobs.Select(j => j.UsedNo).Contains(o.UsedNo));
+            // 统计价 缓存
+            var priceTipRedis = RedisHelper.Get<List<PriceTip>>(MyKeys.RedisPriceTip);
+            foreach (var item in usedList)
+            {
+                var tip = priceTipRedis.Find(o => o.UsedNo == item.UsedNo);
+                item.Count = tip.Count;
+                item.AvgPrice = tip.AvgPrice;
+                item.MinPrice = tip.MinPrice;
+            }
 
             return await SuccessTask(data: usedList);
         }

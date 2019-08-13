@@ -14,10 +14,6 @@
                 return "JobUser_";
             return "JobUser_" + userid;
         }
-        ///// <summary>
-        ///// redis key 以商品编号为组
-        ///// </summary>
-        //public static readonly string RedisJobUsedNo = "JobUsedNo_";
         /// <summary>
         /// redis key 用户信息(UserInfo_1)
         /// </summary>
@@ -25,6 +21,11 @@
         {
             return "UserInfo_" + userid;
         }
+
+        /// <summary>
+        /// 统计的商品价格信息
+        /// </summary>
+        public static string RedisPriceTip = "PriceTip";
 
         /// <summary>
         /// quartz 组(user1)
@@ -56,6 +57,7 @@
                 return "used" + usedNo;
             return "used" + usedNo + "_auctionid" + auctionId;
         }
+
 
     }
 }
