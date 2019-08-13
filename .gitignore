@@ -1,0 +1,19 @@
+﻿################################################################################
+# 此 .gitignore 文件已由 Microsoft(R) Visual Studio 自动创建。
+################################################################################
+
+/.vs
+/CommonHelper/bin
+/CommonHelper/obj
+/Jddb.Code/bin/Release/netcoreapp2.2
+/Jddb.Code/obj
+/Jddb.Core/bin
+/Jddb.Core/obj
+/Jddb.Service/bin
+/Jddb.Service/obj
+/Jddb.Web/bin
+/Jddb.Web/obj
+/Jddb.Web/Properties
+/Jddb.Web/wwwroot/layui
+/Jddb.Web/wwwroot/Index.html
+/Jddb.Web/wwwroot/favicon.ico
