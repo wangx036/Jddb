@@ -148,10 +148,10 @@ namespace Jddb.Web
 
             var _center = new SchedulerCenter();
             // 爬取任务
-            //_center.SetCrawlJob();
+            _center.SetCrawlJob();
             // 缓存任务
-            _center.SetPriceTipJob();
-           
+            //_center.SetPriceTipJob();
+
             #endregion
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

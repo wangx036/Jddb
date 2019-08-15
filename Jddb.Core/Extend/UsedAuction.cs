@@ -1,4 +1,6 @@
-﻿namespace Jddb.Core.Extend
+﻿using Jddb.Core.Model;
+
+namespace Jddb.Core.Extend
 {
     /// <summary>
     /// 商品列表（剔除重复）
@@ -34,5 +36,9 @@
         /// 成交数
         /// </summary>
         public int Count { get; set; }
+        /// <summary>
+        /// quartz信息（竞拍类型、价格等）
+        /// </summary>
+        public JobOffer OfferInfo { get; set; }
     }
 }

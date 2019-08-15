@@ -53,9 +53,9 @@ namespace Jddb.Service
                     ProductName = a.ProductName,
                     PrimaryPic = SqlFunc.AggregateMax(a.PrimaryPic),
                     Quality = a.Quality,
-                    //Count = SqlFunc.AggregateCount(a.Id),
-                    //MinPrice = SqlFunc.AggregateMin(a.CurrentPrice),
-                    //AvgPrice = SqlSugarExternal.SqlRound(SqlFunc.AggregateAvg(a.CurrentPrice), 0)
+                    Count = SqlFunc.AggregateCount(a.Id),
+                    MinPrice = SqlFunc.AggregateMin(a.CurrentPrice),
+                    AvgPrice = SqlSugarExternal.SqlRound(SqlFunc.AggregateAvg(a.CurrentPrice), 0)
                 });
             var page = Async ? await quary.ToPageAsync(pageIndex, pageSize) : quary.ToPage(pageIndex, pageSize);
 
@@ -78,9 +78,9 @@ namespace Jddb.Service
                     ProductName = a.ProductName,
                     PrimaryPic = SqlFunc.AggregateMax(a.PrimaryPic),
                     Quality = a.Quality,
-                    //Count = SqlFunc.AggregateCount(a.Id),
-                    //MinPrice = SqlFunc.AggregateMin(a.CurrentPrice),
-                    //AvgPrice = SqlSugarExternal.SqlRound(SqlFunc.AggregateAvg(a.CurrentPrice), 0)
+                    Count = SqlFunc.AggregateCount(a.Id),
+                    MinPrice = SqlFunc.AggregateMin(a.CurrentPrice),
+                    AvgPrice = SqlSugarExternal.SqlRound(SqlFunc.AggregateAvg(a.CurrentPrice), 0)
                 });
 
             return quary.ToList();
