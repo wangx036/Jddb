@@ -112,7 +112,7 @@ namespace Jddb.Web.Quartz
             {
                 JobGroup = "PriceTipJob",
                 JobName = "PriceTipJob",
-                Description = "统计数据库中的价格信息，缓存到redis",
+                Description = "统计数据库中的价格信息，更新缓存表",
                 TriggerType = TriggerTypeEnum.Cron,
                 BeginTime = DateTimeOffset.Now,
                 EndTime = DateTimeOffset.Now.AddYears(10),
@@ -124,7 +124,7 @@ namespace Jddb.Web.Quartz
             {
 
                 // 定义这个工作，并将其绑定到我们的IJob实现类                
-                IJobDetail job = JobBuilder.CreateForAsync<PriceTipJob>()
+                IJobDetail job = JobBuilder.CreateForAsync<PriceCacheJob>()
                     .WithDescription(entity.Description)
                     .WithIdentity(entity.JobName, entity.JobGroup)
                     .Build();

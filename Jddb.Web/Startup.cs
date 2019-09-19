@@ -31,12 +31,15 @@ namespace Jddb.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IHostingEnvironment env, IConfiguration configuration)
         {
             Configuration = configuration;
+            CurrentEnvironment = env;
         }
 
         public IConfiguration Configuration { get; }
+        private IHostingEnvironment CurrentEnvironment { get; }
+
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -146,11 +149,14 @@ namespace Jddb.Web
 
             #region Quartz任务
 
-            var _center = new SchedulerCenter();
-            // 爬取任务
-            _center.SetCrawlJob();
-            // 缓存任务
-            //_center.SetPriceTipJob();
+            if(!CurrentEnvironment.IsDevelopment())
+            {
+                var _center = new SchedulerCenter();
+                // 爬取任务
+                _center.SetCrawlJob();
+                // 缓存任务
+                _center.SetPriceTipJob();
+            }
 
             #endregion
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);

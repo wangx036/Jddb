@@ -25,20 +25,27 @@ namespace Jddb.Web.Quartz
 
         public async Task Execute(IJobExecutionContext context)
         {
-            var crawlTime = DateTime.Now;
-            var tuple = InsertAuctionInfo();
-            if(tuple==null) return;
-            AddUsedNoJob(tuple.Item2);
-            var bidRecordCount = InsertBidRecord();
-
-            var crawLog=new CrawlLog()
+            try
             {
-                AuctionCount = tuple.Item1.Count,
-                DelAuctionCount = tuple.Item2.Count- tuple.Item1.Count,
-                BidRecordCount = bidRecordCount,
-                CrawlTime = crawlTime
-            };
-            _auctionService.Db.Insertable<CrawlLog>(crawLog).ExecuteCommand();
+                var crawlTime = DateTime.Now;
+                var tuple = InsertAuctionInfo();
+                if(tuple==null) return;
+                AddUsedNoJob(tuple.Item2);
+                var bidRecordCount = InsertBidRecord();
+
+                var crawLog=new CrawlLog()
+                {
+                    AuctionCount = tuple.Item1.Count,
+                    DelAuctionCount = tuple.Item2.Count- tuple.Item1.Count,
+                    BidRecordCount = bidRecordCount,
+                    CrawlTime = crawlTime
+                };
+                _auctionService.Db.Insertable<CrawlLog>(crawLog).ExecuteCommand();
+            }
+            catch (Exception e)
+            {
+                Logger.Default.Error("[CrawlJob.Execute]"+e.Message, e);
+            }
         }
 
 

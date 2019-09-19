@@ -1,11 +1,12 @@
 ﻿using Jddb.Core.Model;
+using SqlSugar;
 
-namespace Jddb.Core.Extend
+namespace Jddb.Core.Model
 {
     /// <summary>
     /// 商品列表（剔除重复）
     /// </summary>
-    public class UsedAuction
+    public class PriceCache:Entity
     {
         /// <summary>
         /// 商品编号
@@ -39,6 +40,7 @@ namespace Jddb.Core.Extend
         /// <summary>
         /// quartz信息（竞拍类型、价格等）
         /// </summary>
+        [SugarColumn(IsIgnore = true)]
         public JobOffer OfferInfo { get; set; }
     }
 }

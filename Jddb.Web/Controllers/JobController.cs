@@ -27,13 +27,15 @@ namespace Jddb.Web.Controllers
         private AuctionService _auctionService;
         private BaseServer<JobOffer> _jobOfferServer;
         private BaseServer<SysAccount> _accountServer;
+        private PriceCacheServer _priceCacheServer;
 
-        public JobController(SchedulerCenter schedulerCenter,AuctionService auctionService,BaseServer<JobOffer> jobOfferServer,BaseServer<SysAccount> accountServer)
+        public JobController(SchedulerCenter schedulerCenter,AuctionService auctionService,BaseServer<JobOffer> jobOfferServer,BaseServer<SysAccount> accountServer, PriceCacheServer priceCacheServer)
         {
             _schedulerCenter = schedulerCenter;
             _auctionService = auctionService;
             _jobOfferServer = jobOfferServer;
             _accountServer = accountServer;
+            _priceCacheServer = priceCacheServer;
         }
 
         /// <summary>
@@ -150,14 +152,14 @@ namespace Jddb.Web.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("getRedisJobs")]
-        public async Task<ApiResult<List<UsedAuction>>> GetMyJobs()
+        public async Task<ApiResult<List<PriceCache>>> GetMyJobs()
         {
             var redisKey = MyKeys.RedisJobUser(LoginUser().Id);
             var userJobs = RedisHelper.Get<List<JobOffer>>(redisKey);
             if (userJobs == null || !userJobs.Any())
-                return await SuccessTask<List<UsedAuction>> ("暂无任务");
+                return await SuccessTask<List<PriceCache>> ("暂无任务");
 
-            var usedList = await _auctionService.UsedAuctions(o => userJobs.Select(j => j.UsedNo).Contains(o.UsedNo));
+            var usedList = await _priceCacheServer.GetListAsync(o => userJobs.Select(j => j.UsedNo).Contains(o.UsedNo));
 
             foreach (var job in userJobs)
             {

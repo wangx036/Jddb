@@ -88,8 +88,8 @@ namespace Jddb.Service
         {
             var query = Db.Queryable<T>()
                 .Where(where)
-                .OrderByIF((int)orderEnum == 1, order, SqlSugar.OrderByType.Asc)
-                .OrderByIF((int)orderEnum == 2, order, SqlSugar.OrderByType.Desc);
+                .OrderByIF((int)orderEnum == 0, order, SqlSugar.OrderByType.Asc)
+                .OrderByIF((int)orderEnum == 1, order, SqlSugar.OrderByType.Desc);
             var res = Async ? await query.ToPageAsync(pageIndex, pageSize) : query.ToPage(pageIndex, pageSize);
             return res;
         }
@@ -104,8 +104,8 @@ namespace Jddb.Service
         {
             var query = Db.Queryable<T>()
                 .Where(where)
-                .OrderByIF((int)orderEnum == 1, order, SqlSugar.OrderByType.Asc)
-                .OrderByIF((int)orderEnum == 2, order, SqlSugar.OrderByType.Desc);
+                .OrderByIF((int)orderEnum == 0, order, SqlSugar.OrderByType.Asc)
+                .OrderByIF((int)orderEnum == 1, order, SqlSugar.OrderByType.Desc);
             var res = Async ? await query.ToListAsync() : query.ToList();
             return res;
         }

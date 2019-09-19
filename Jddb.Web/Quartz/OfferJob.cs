@@ -69,6 +69,7 @@ namespace Jddb.Web.Quartz
                 MailHelper.SendEmail(userThor.Mail, "京东夺宝登录失效提醒", "您好，您的Thor已失效，请重新设置。");
                 // 设置状态，停止任务
                 userThor.Status = false;
+                RedisHelper.Set(redisKey, userThor);
             }
 
             // 单次竞拍，中拍后删除redis任务
@@ -85,10 +86,10 @@ namespace Jddb.Web.Quartz
                     if(!userThor.Mail.IsNullOrWhiteSpace())
                     {
                         var body = $@"
-商品编号：<a href='https://paipai.jd.com/auction-detail/{jobOffer.AuctionId}'>{jobOffer.AuctionId}</a>
-商品名称：<a href='https://paipai.jd.com/auction-detail/{jobOffer.AuctionId}'>{jobOffer.AuctionName}</a>
-中拍价格：{jobOffer.OfferPrice}
-中拍时间：{jobOffer.OfferTime}";
+<br>商品编号：<a href='https://paipai.jd.com/auction-detail/{jobOffer.AuctionId}'>{jobOffer.AuctionId}</a>
+<br>商品名称：<a href='https://paipai.jd.com/auction-detail/{jobOffer.AuctionId}'>{jobOffer.AuctionName}</a>
+<br>中拍价格：{jobOffer.OfferPrice}
+<br>中拍时间：{jobOffer.OfferTime}";
                         MailHelper.SendEmail(userThor.Mail, "京东夺宝中拍提醒", body);
                     }
                 }
